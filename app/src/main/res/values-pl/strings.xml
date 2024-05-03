@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PRM 1</string>
+    <string name="product_list_label">Lista produktów</string>
+    <string name="product_label">Produkt</string>
+    <string name="add_product">Dodaj produkt</string>
+    <string name="filter_label">Filtrowanie</string>
+    <string name="category_label">Kategoria</string>
+    <string name="name_label">Nazwa</string>
+    <string name="disposed_label">Wyrzucony</string>
+    <string name="expiration_date_label">Data ważności</string>
+    <string name="quantity_label">Ilość</string>
+    <string-array name="categories">
+        <item>Lek</item>
+        <item>Kosmetyk</item>
+        <item>Produkt spożywczy</item>
+    </string-array><string name="save_label">Zapisz</string>
+</resources>

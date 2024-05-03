@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">PRM 1</string>
+    <string name="product_list_label">Product List</string>
+    <string name="product_label">Product</string>
+    <string name="add_product">Add product</string>
+    <string name="filter_label">Filter</string>
+    <string name="name_label">Name</string>
+    <string name="category_label">Category</string>
+    <string name="disposed_label">Disposed</string>
+    <string name="expiration_date_label">Expires at</string>
+    <string name="quantity_label">Quantity</string>
+    <string-array name="categories">
+        <item>Medicaments</item>
+        <item>Cosmetics</item>
+        <item>Foods</item>
+    </string-array>
+    <string name="save_label">Save</string>
 </resources>

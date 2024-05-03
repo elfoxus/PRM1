@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     xmlns:tools="http://schemas.android.com/tools"
+     android:id="@+id/nav_main"
+     app:startDestination="@id/productList">
+    <fragment
+        android:id="@+id/productList"
+        android:name="com.example.prm1.fragments.ProductList"
+        android:label="@string/product_list_label"
+        tools:layout="@layout/fragment_product_list">
+        <action
+            android:id="@+id/action_productList_to_upsertProductFragment"
+            app:destination="@id/upsertProductFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/upsertProductFragment"
+        android:name="com.example.prm1.fragments.UpsertProductFragment"
+        android:label="@string/product_label"
+        tools:layout="@layout/fragment_upsert_product">
+        <argument
+            android:name="product"
+            app:argType="com.example.prm1.data.model.Product"
+            android:defaultValue="@null"
+            app:nullable="true"/>
+        <action
+            android:id="@+id/action_upsertProductFragment_to_productList"
+            app:destination="@id/productList" />
+    </fragment>
+</navigation>

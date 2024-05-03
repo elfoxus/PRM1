@@ -19,10 +19,9 @@
         android:label="@string/product_label"
         tools:layout="@layout/fragment_upsert_product">
         <argument
-            android:name="product"
-            app:argType="com.example.prm1.data.model.Product"
-            android:defaultValue="@null"
-            app:nullable="true"/>
+            android:name="productId"
+            android:defaultValue="-1L"
+            app:nullable="false"/>
         <action
             android:id="@+id/action_upsertProductFragment_to_productList"
             app:destination="@id/productList" />

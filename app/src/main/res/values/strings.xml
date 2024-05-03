@@ -15,4 +15,6 @@
         <item>Foods</item>
     </string-array>
     <string name="save_label">Save</string>
+    <string name="name_error">Name cannot be empty</string>
+    <string name="form_has_errors">Form has errors!</string>
 </resources>

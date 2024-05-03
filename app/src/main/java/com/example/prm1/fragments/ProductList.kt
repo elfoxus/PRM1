@@ -7,8 +7,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.prm1.R
 import com.example.prm1.adapters.ProductsAdapter
-import com.example.prm1.data.DataSource
+import com.example.prm1.data.ProductDb
+import com.example.prm1.data.model.Product
 import com.example.prm1.databinding.FragmentProductListBinding
+import kotlin.concurrent.thread
 
 class ProductList : Fragment() {
 
@@ -31,9 +33,10 @@ class ProductList : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter = ProductsAdapter()
-        adapter.apply {
-            replace(DataSource.products)
-        }
+
+        loadData()
+
+
         binding.recyclerViewProductList.let {
             it.adapter = adapter
             it.layoutManager = LinearLayoutManager(requireContext())
@@ -46,11 +49,22 @@ class ProductList : Fragment() {
         }
     }
 
+    private fun loadData() = thread {
+        val products = ProductDb.open(requireContext()).productDao.getAll().map { entity ->
+            Product.fromEntity(entity)
+        }
+
+        requireActivity().runOnUiThread {
+            adapter.apply {
+                replace(products)
+            }
+        }
+    }
+
+
     override fun onStart() {
         super.onStart()
-        adapter.apply {
-            replace(DataSource.products)
-        }
+        loadData()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

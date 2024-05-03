@@ -4,15 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.prm1.R
 import com.example.prm1.data.model.Product
 import com.example.prm1.databinding.ProductListElementBinding
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -35,7 +31,7 @@ class ProductViewHolder (val binding: ProductListElementBinding)
     private fun navigateToProductDetails(product: Product, view: View) {
         view.findNavController().navigate(
             R.id.action_productList_to_upsertProductFragment,
-            bundleOf("product" to product)
+            bundleOf("productId" to product.id)
         )
     }
 }

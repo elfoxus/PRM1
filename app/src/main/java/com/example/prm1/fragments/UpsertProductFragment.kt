@@ -12,7 +12,6 @@ import com.example.prm1.data.model.Category
 import com.example.prm1.data.model.Product
 import com.example.prm1.databinding.FragmentUpsertProductBinding
 import java.time.Instant
-import java.time.ZoneId
 
 class UpsertProductFragment : Fragment() {
 
@@ -37,10 +36,13 @@ class UpsertProductFragment : Fragment() {
         val product: Product? = arguments?.get("product") as Product?
         if (product != null) {
             edited = true
+            binding.disposedField.visibility = View.VISIBLE
             fillFieldsOnInit(product)
             bindFields(product)
         } else {
             edited = false
+            binding.disposedField.visibility = View.GONE
+            binding.quantityField.setText("1") // default value
         }
     }
 
@@ -61,7 +63,7 @@ class UpsertProductFragment : Fragment() {
             }
         })
         binding.disposedField.setOnCheckedChangeListener { _, isChecked ->
-            product.thrownAway = isChecked
+            product.disposed = isChecked
         }
         binding.expirationCalendar.setOnDateChangeListener { _, year, month, dayOfMonth ->
             product.expirationDate = Instant.ofEpochMilli(binding.expirationCalendar.date)
@@ -72,7 +74,7 @@ class UpsertProductFragment : Fragment() {
         binding.nameField.setText(product.name)
         binding.quantityField.setText(product.quantity.toString())
         binding.categorySpinner.setSelection(product.category.ordinal)
-        binding.disposedField.isChecked = product.thrownAway
+        binding.disposedField.isChecked = product.disposed
         binding.productImageView.setImageResource(product.resId)
         binding.expirationCalendar.date = product.expirationDate.toEpochMilli()
     }

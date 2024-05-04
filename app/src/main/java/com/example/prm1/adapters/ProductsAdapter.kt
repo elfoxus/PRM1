@@ -18,10 +18,17 @@ class ProductViewHolder (val binding: ProductListElementBinding)
 
     fun bind(product: Product) {
         binding.name.text = product.name
-        binding.expirationDate.text = LocalDateTime.ofInstant(product.expirationDate, ZoneId.of("UTC")).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
-        binding.category.text = product.category.toString()
+        binding.expirationDate.text = product.getDateString()
+        binding.category.text = binding.root.resources.getStringArray(R.array.categories).get(product.category.getId())
         binding.quantity.text = product.quantity.toString()
         binding.imageView.setImageResource(product.resId)
+        if (product.isExpired()) {
+            binding.cardView.setBackgroundColor(binding.root.resources.getColor(R.color.expired_bkg, null))
+        }
+
+        if (product.disposed) {
+            binding.cardView.setBackgroundColor(binding.root.resources.getColor(R.color.disposed_bkg, null))
+        }
 
         binding.root.setOnClickListener {
             _ -> navigateToProductDetails(product, binding.root)

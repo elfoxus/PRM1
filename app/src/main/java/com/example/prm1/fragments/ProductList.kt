@@ -50,14 +50,16 @@ class ProductList : Fragment() {
     }
 
     private fun loadData() = thread {
-        val products = ProductDb.open(requireContext()).productDao.getAll().map { entity ->
-            Product.fromEntity(entity)
+        val products = ProductDb.open(requireContext()).productDao.getAllSortedByExpirationDate().map { entity ->
+            val resId = resources.getIdentifier(entity.image, "drawable", requireContext().packageName)
+            Product.fromEntity(entity, resId)
         }
 
         requireActivity().runOnUiThread {
             adapter.apply {
                 replace(products)
             }
+            binding.listSizeLabel.text = resources.getText(R.string.list_size).toString() + " " + products.size
         }
     }
 

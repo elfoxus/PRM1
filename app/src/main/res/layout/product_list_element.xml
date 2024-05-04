@@ -27,7 +27,6 @@
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"/>
         <TextView
-            android:text="TextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/name"
@@ -40,7 +39,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="16dp"/>
         <TextView
-            android:text="TextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/category"
@@ -49,7 +47,6 @@
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="@+id/name"/>
         <TextView
-            android:text="TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/expirationDate"
@@ -58,7 +55,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="16dp"/>
         <TextView
-            android:text="TextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/quantity"

@@ -11,6 +11,9 @@ interface ProductDao {
     @androidx.room.Query("SELECT * FROM product")
     fun getAll(): List<ProductEntity>
 
+    @androidx.room.Query("SELECT * FROM product ORDER BY expirationDate ASC")
+    fun getAllSortedByExpirationDate(): List<ProductEntity>
+
     @androidx.room.Query("SELECT * FROM product WHERE id = :id")
     fun getById(id: Long): ProductEntity
 

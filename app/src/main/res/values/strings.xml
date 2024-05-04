@@ -17,4 +17,5 @@
     <string name="save_label">Save</string>
     <string name="name_error">Name cannot be empty</string>
     <string name="form_has_errors">Form has errors!</string>
+    <string name="list_size">Number of elements: </string>
 </resources>

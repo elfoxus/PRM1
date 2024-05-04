@@ -17,4 +17,5 @@
     </string-array><string name="save_label">Zapisz</string>
     <string name="name_error">Nazwa nie może być pusta</string>
     <string name="form_has_errors">Formularz posiada błędy!</string>
+    <string name="list_size">Ilość: </string>
 </resources>

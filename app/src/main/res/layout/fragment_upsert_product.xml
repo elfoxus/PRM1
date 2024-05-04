@@ -1,16 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:fitsSystemWindows="true" tools:context=".fragments.UpsertProductFragment" android:id="@+id/upsertLayout">
-  <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="match_parent">
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
-      <ImageView android:layout_width="match_parent" android:layout_height="200dp" android:id="@+id/product_image_view"
-      android:scaleType="fitCenter" tools:srcCompat="@drawable/img" app:srcCompat="@drawable/img"/>
-      <EditText android:layout_width="match_parent" android:layout_height="48dp" android:inputType="text" android:ems="10" android:id="@+id/nameField" android:hint="@string/name_label"/>
-      <TextView android:text="@string/category_label" android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/categoryLabel"/>
-      <Spinner android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/categorySpinner" android:entries="@array/categories" android:minHeight="48dp"/>
-      <TextView android:text="@string/expiration_date_label" android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/expirationLabel"/>
-      <CalendarView android:layout_width="match_parent" android:layout_height="307dp" android:id="@+id/expirationCalendar"/>
-      <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" android:ems="10" android:id="@+id/quantityField" android:hint="@string/quantity_label" android:minHeight="48dp"/>
-      <Switch android:text="@string/disposed_label" android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/disposedField" android:minHeight="48dp"/>
-    </LinearLayout>
-  </androidx.core.widget.NestedScrollView>
+      <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent" android:layout_height="match_parent">
+          <androidx.core.widget.NestedScrollView android:id="@+id/productScrollView" android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" >
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                      <androidx.recyclerview.widget.RecyclerView android:id="@+id/productImages" android:layout_width="match_parent" android:layout_height="150dp" />
+                      <TextView android:text="@string/name_label" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+                      <EditText android:layout_width="match_parent" android:layout_height="48dp" android:inputType="text" android:ems="10" android:id="@+id/nameField" android:hint="@string/name_label"/>
+                      <TextView android:text="@string/category_label" android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/categoryLabel"/>
+                      <Spinner android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/categorySpinner" android:entries="@array/categories" android:minHeight="48dp"/>
+                      <TextView android:text="@string/expiration_date_label" android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/expirationLabel"/>
+                      <EditText
+                            android:id="@+id/expirationCalendar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:drawableEnd="@android:drawable/ic_menu_my_calendar"
+                            android:drawablePadding="8dp"
+                            android:focusable="false"
+                            android:hint="@string/expiration_date_label"
+                            android:inputType="none" />
+<!--                      <CalendarView android:layout_width="match_parent" android:layout_height="307dp" android:id="@+id/expirationCalendar"/>-->
+                      <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/quantityLabel" android:text="@string/quantity_label"/>
+                      <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" android:ems="10" android:id="@+id/quantityField" android:hint="@string/quantity_label" android:minHeight="48dp"/>
+                      <Switch android:text="@string/disposed_label" android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/disposedField" android:minHeight="48dp"/>
+                    </LinearLayout>
+                </androidx.core.widget.NestedScrollView>
+      </androidx.constraintlayout.widget.ConstraintLayout>
+
+      <ProgressBar android:layout_width="wrap_content" android:layout_height="wrap_content"
+        style="?android:attr/progressBarStyle" android:id="@+id/productProgressBar" android:layout_gravity="center"
+        android:visibility="visible"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

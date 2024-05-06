@@ -207,29 +207,12 @@ class UpsertProductFragment : Fragment() {
                     showErrorNotification()
                     return false
                 }
-                // save/update and navigate back
+
                 thread {
                     if (isNewProduct()) {
-                        val product = ProductEntity(
-                            name = binding.nameField.text.toString(),
-                            expirationDate = textToMillis(binding.expirationCalendar.text.toString()),
-                            category = binding.categorySpinner.selectedItemPosition,
-                            quantity = binding.quantityField.text.toString().toInt(),
-                            disposed = binding.disposedField.isChecked,
-                            image = resources.getResourceEntryName(imagesAdapter.selectedIdRes)
-                        )
-                        db.productDao.addProduct(product)
+                        saveNew()
                     } else {
-                        val product = ProductEntity(
-                            id = productId,
-                            name = binding.nameField.text.toString(),
-                            expirationDate = textToMillis(binding.expirationCalendar.text.toString()),
-                            category = binding.categorySpinner.selectedItemPosition,
-                            quantity = binding.quantityField.text.toString().toInt(),
-                            disposed = binding.disposedField.isChecked,
-                            image = resources.getResourceEntryName(imagesAdapter.selectedIdRes)
-                        )
-                        db.productDao.updateProduct(product)
+                        updateExisting()
                     }
                     // navigate back to product list after saving
                     requireActivity().runOnUiThread {
@@ -240,6 +223,31 @@ class UpsertProductFragment : Fragment() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun updateExisting() {
+        val product = ProductEntity(
+            id = productId,
+            name = binding.nameField.text.toString(),
+            expirationDate = textToMillis(binding.expirationCalendar.text.toString()),
+            category = binding.categorySpinner.selectedItemPosition,
+            quantity = binding.quantityField.text.toString().toInt(),
+            disposed = binding.disposedField.isChecked,
+            image = resources.getResourceEntryName(imagesAdapter.selectedIdRes)
+        )
+        db.productDao.updateProduct(product)
+    }
+
+    private fun saveNew() {
+        val product = ProductEntity(
+            name = binding.nameField.text.toString(),
+            expirationDate = textToMillis(binding.expirationCalendar.text.toString()),
+            category = binding.categorySpinner.selectedItemPosition,
+            quantity = binding.quantityField.text.toString().toInt(),
+            disposed = binding.disposedField.isChecked,
+            image = resources.getResourceEntryName(imagesAdapter.selectedIdRes)
+        )
+        db.productDao.addProduct(product)
     }
 
     private fun showExpiredNotification() {

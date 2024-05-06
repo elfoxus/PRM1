@@ -11,34 +11,32 @@ import com.example.prm1.R
 import com.example.prm1.data.ProductDb
 import com.example.prm1.data.model.Product
 import com.example.prm1.databinding.ProductListElementBinding
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import kotlin.concurrent.thread
 
 class ProductViewHolder (val binding: ProductListElementBinding)
     : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(product: Product, adapter: ProductsAdapter, db: ProductDb) {
+        fillInformations(product)
+        setBackground(product)
+        handleEvents(product, db, adapter)
+    }
+
+    private fun fillInformations(product: Product) {
         binding.name.text = product.name
         binding.expirationDate.text = product.getDateString()
         binding.category.text = binding.root.resources.getStringArray(R.array.categories).get(product.category.getId())
         binding.quantity.text = product.quantity.toString()
         binding.imageView.setImageResource(product.resId)
-        if (product.isExpired()) {
-            binding.cardView.setBackgroundColor(binding.root.resources.getColor(R.color.expired_bkg, null))
-        }
+    }
 
-        if (product.disposed) {
-            binding.cardView.setBackgroundColor(binding.root.resources.getColor(R.color.disposed_bkg, null))
-        }
-
-        if (product.isLastDay()) {
-            binding.cardView.setBackgroundColor(binding.root.resources.getColor(R.color.last_day_bkg, null))
-        }
-
-        binding.root.setOnClickListener {
-            _ -> navigateToProductDetails(product, binding.root)
+    private fun handleEvents(
+        product: Product,
+        db: ProductDb,
+        adapter: ProductsAdapter
+    ) {
+        binding.root.setOnClickListener { _ ->
+            navigateToProductDetails(product, binding.root)
         }
 
         binding.root.setOnLongClickListener {
@@ -53,9 +51,7 @@ class ProductViewHolder (val binding: ProductListElementBinding)
                             it.post {
                                 adapter.remove(product)
                             }
-
                         }
-
                     }
                     .setNegativeButton(R.string.no) { _, _ -> }
                     .show()
@@ -72,6 +68,20 @@ class ProductViewHolder (val binding: ProductListElementBinding)
             }
 
             true
+        }
+    }
+
+    private fun setBackground(product: Product) {
+        if (product.isExpired()) {
+            binding.cardView.setBackgroundColor(binding.root.resources.getColor(R.color.expired_bkg, null))
+        }
+
+        if (product.disposed) {
+            binding.cardView.setBackgroundColor(binding.root.resources.getColor(R.color.disposed_bkg, null))
+        }
+
+        if (product.isLastDay()) {
+            binding.cardView.setBackgroundColor(binding.root.resources.getColor(R.color.last_day_bkg, null))
         }
     }
 

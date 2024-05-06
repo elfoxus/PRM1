@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.prm1.R
 import com.example.prm1.adapters.ProductsAdapter
+import com.example.prm1.data.ProductDao
 import com.example.prm1.data.ProductDb
 import com.example.prm1.data.entity.ProductEntity
 import com.example.prm1.data.model.Product
@@ -84,21 +85,7 @@ class ProductList : Fragment() {
 
     private fun loadData(category: Int = -1, date: Int = 0) = thread {
         val productDao = db.productDao
-
-        lateinit var dbResult: List<ProductEntity>
-        if (all(category, date)) {
-            dbResult = productDao.getAllSortedByExpirationDate()
-        } else if (allDatesWithCategory(category, date)) {
-            dbResult = productDao.getAllSortedByExpirationDateForCategory(category)
-        } else if (expiredAllCategory(category, date)) {
-            dbResult = productDao.getExpiredSortedByExpirationDate()
-        } else if (expiredWithCategory(category, date)) {
-            dbResult = productDao.getExpiredWithCategorySortedByExpirationDate(category)
-        } else if (notExpiredAllCategory(category, date)) {
-            dbResult = productDao.getNotExpiredSortedByExpirationDate()
-        } else {
-            dbResult = productDao.getNotExpiredSortedByExpirationDateWithCategory(category)
-        }
+        val dbResult: List<ProductEntity> = getProductsFromDB(category, date, productDao)
 
         val products = dbResult.map { entity ->
             val resId = resources.getIdentifier(entity.image, "drawable", requireContext().packageName)
@@ -111,6 +98,28 @@ class ProductList : Fragment() {
             }
             binding.listSizeLabel.text = resources.getText(R.string.list_size).toString() + " " + products.size
         }
+    }
+
+    private fun getProductsFromDB(
+        category: Int,
+        date: Int,
+        productDao: ProductDao
+    ): List<ProductEntity> {
+        lateinit var dbResult: List<ProductEntity>
+        if (all(category, date)) {
+            dbResult = productDao.getAllSortedByExpirationDate()
+        } else if (allDatesWithCategory(category, date)) {
+            dbResult = productDao.getAllSortedByExpirationDateForCategory(category)
+        } else if (expiredAllCategory(category, date)) {
+            dbResult = productDao.getExpiredSortedByExpirationDate()
+        } else if (expiredWithCategory(category, date)) {
+            dbResult = productDao.getExpiredWithCategorySortedByExpirationDate(category)
+        } else if (notExpiredAllCategory(category, date)) {
+            dbResult = productDao.getNotExpiredSortedByExpirationDate()
+        } else { // not expired with category
+            dbResult = productDao.getNotExpiredSortedByExpirationDateWithCategory(category)
+        }
+        return dbResult
     }
 
     private fun notExpiredAllCategory(category: Int, date: Int) = category == -1 && date == 2

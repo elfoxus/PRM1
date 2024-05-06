@@ -14,12 +14,9 @@ class ProductImagesAdapter: RecyclerView.Adapter<ProductImagesViewHolder>() {
     private val images = listOf(
         R.drawable.chleb,
         R.drawable.mleko,
-//        R.drawable.jajka,
         R.drawable.aspiryna,
-//        R.drawable.witamina_c,
         R.drawable.tusz_do_rzes,
         R.drawable.pasta_do_zebow,
-//        R.drawable.ibuprofen
     )
     private var selectedPosition: Int = 0
     val selectedIdRes: Int
@@ -69,7 +66,9 @@ class ProductImagesViewHolder(val binding: ProductImgBinding): RecyclerView.View
         binding.productImage.colorFilter = if (selected) {
             null
         } else {
-            // grayscale
+            // grayscale when not selected
+            // I don't know why, but couldn't manage to show frame around like in the tutorial, it was not visible,
+            // so I decided to use grayscale for not selected images
             ColorMatrixColorFilter(
                 floatArrayOf(
                     0.33f, 0.33f, 0.33f, 0f, 0f,

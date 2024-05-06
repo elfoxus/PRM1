@@ -9,6 +9,8 @@ import com.example.prm1.databinding.ProductImgBinding
 
 class ProductImagesAdapter: RecyclerView.Adapter<ProductImagesViewHolder>() {
 
+    private var enabled: Boolean = true
+
     private val images = listOf(
         R.drawable.chleb,
         R.drawable.mleko,
@@ -32,9 +34,11 @@ class ProductImagesAdapter: RecyclerView.Adapter<ProductImagesViewHolder>() {
         )
         return ProductImagesViewHolder(binding).also { vh ->
             binding.root.setOnClickListener {
-                notifyItemChanged(selectedPosition)
-                selectedPosition = vh.layoutPosition
-                notifyItemChanged(selectedPosition)
+                if (enabled) {
+                    notifyItemChanged(selectedPosition)
+                    selectedPosition = vh.layoutPosition
+                    notifyItemChanged(selectedPosition)
+                }
             }
         }
     }
@@ -49,6 +53,11 @@ class ProductImagesAdapter: RecyclerView.Adapter<ProductImagesViewHolder>() {
 
     fun selectImage(resId: Int) {
         selectedPosition = images.indexOf(resId)
+        notifyDataSetChanged()
+    }
+
+    fun disable() {
+        enabled = false
         notifyDataSetChanged()
     }
 }

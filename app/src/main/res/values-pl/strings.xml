@@ -14,8 +14,25 @@
         <item>Lek</item>
         <item>Kosmetyk</item>
         <item>Produkt spożywczy</item>
-    </string-array><string name="save_label">Zapisz</string>
+    </string-array>
+    <string-array name="categories_filter">
+            <item>Wszystkie</item>
+            <item>Leki</item>
+            <item>Cosmettyki</item>
+            <item>Produkty spożywcze</item>
+        </string-array>
+        <string-array name="expired_filter">
+            <item>Wszystkie</item>
+            <item>Przeterminowane</item>
+            <item>Ważne</item>
+        </string-array>
+    <string name="save_label">Zapisz</string>
     <string name="name_error">Nazwa nie może być pusta</string>
     <string name="form_has_errors">Formularz posiada błędy!</string>
     <string name="list_size">Ilość: </string>
+    <string name="expired_product">Produkt stracił ważność</string>
+    <string name="remove_dialog_title">Usunąć?</string>
+    <string name="remove_dialog_body">Czy na pewno chcesz usunąć ten produkt?</string>
+    <string name="yes">Tak</string>
+    <string name="no">Nie</string>
 </resources>

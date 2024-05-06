@@ -1,5 +1,6 @@
 package com.example.prm1.adapters
 
+import android.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,16 +8,18 @@ import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.prm1.R
+import com.example.prm1.data.ProductDb
 import com.example.prm1.data.model.Product
 import com.example.prm1.databinding.ProductListElementBinding
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import kotlin.concurrent.thread
 
 class ProductViewHolder (val binding: ProductListElementBinding)
     : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(product: Product) {
+    fun bind(product: Product, adapter: ProductsAdapter, db: ProductDb) {
         binding.name.text = product.name
         binding.expirationDate.text = product.getDateString()
         binding.category.text = binding.root.resources.getStringArray(R.array.categories).get(product.category.getId())
@@ -30,8 +33,45 @@ class ProductViewHolder (val binding: ProductListElementBinding)
             binding.cardView.setBackgroundColor(binding.root.resources.getColor(R.color.disposed_bkg, null))
         }
 
+        if (product.isLastDay()) {
+            binding.cardView.setBackgroundColor(binding.root.resources.getColor(R.color.last_day_bkg, null))
+        }
+
         binding.root.setOnClickListener {
             _ -> navigateToProductDetails(product, binding.root)
+        }
+
+        binding.root.setOnLongClickListener {
+            if (!product.isExpired()) {
+                AlertDialog.Builder(it.context)
+                    .setTitle(R.string.remove_dialog_title)
+                    .setMessage(R.string.remove_dialog_body)
+                    .setPositiveButton(R.string.yes) { _, _ ->
+                        thread {
+                            db.productDao.removeProduct(product.toEntity(resources = it.resources))
+                            // refresh the list on ui thread
+                            it.post {
+                                adapter.remove(product)
+                            }
+
+                        }
+
+                    }
+                    .setNegativeButton(R.string.no) { _, _ -> }
+                    .show()
+            } else if (!product.disposed) {
+                product.disposed = true
+                thread {
+                    db.productDao.updateProduct(product.toEntity(resources = it.resources))
+                    // refresh the list
+                    it.post {
+                        adapter.update(product)
+                    }
+                }
+
+            }
+
+            true
         }
     }
 
@@ -43,9 +83,10 @@ class ProductViewHolder (val binding: ProductListElementBinding)
     }
 }
 
-class ProductsAdapter : RecyclerView.Adapter<ProductViewHolder>() {
-
+class ProductsAdapter(database: ProductDb) : RecyclerView.Adapter<ProductViewHolder>() {
+    private val db = database
     private val products = mutableListOf<Product>()
+    var onProductRemoved: (size: Int) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         val binding = ProductListElementBinding.inflate(
@@ -56,7 +97,7 @@ class ProductsAdapter : RecyclerView.Adapter<ProductViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        holder.bind(products[position])
+        holder.bind(products[position], this, db)
     }
 
     override fun getItemCount(): Int {
@@ -78,6 +119,7 @@ class ProductsAdapter : RecyclerView.Adapter<ProductViewHolder>() {
         val index = products.indexOf(product)
         products.remove(product)
         notifyItemRemoved(index)
+        onProductRemoved(products.size)
     }
 
     fun update(product: Product) {
@@ -85,5 +127,4 @@ class ProductsAdapter : RecyclerView.Adapter<ProductViewHolder>() {
         products[index] = product
         notifyItemChanged(index)
     }
-
 }

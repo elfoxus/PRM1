@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.prm1.R
+import com.example.prm1.Utils
 import com.example.prm1.adapters.ProductImagesAdapter
 import com.example.prm1.data.ProductDb
 import com.example.prm1.data.entity.ProductEntity
@@ -21,15 +22,18 @@ private const val NO_PRODUCT = -1L
 
 class UpsertProductFragment : Fragment() {
 
+    private lateinit var db: ProductDb
     private lateinit var binding: FragmentUpsertProductBinding
     private val errors: HashSet<String> = java.util.HashSet()
     private var productId: Long = NO_PRODUCT
     private lateinit var imagesAdapter: ProductImagesAdapter
+    private var expired: Boolean = false;
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        db = ProductDb.open(requireContext())
         binding = FragmentUpsertProductBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
         return binding.root
@@ -61,7 +65,7 @@ class UpsertProductFragment : Fragment() {
 
     private fun fillFieldsOnInit(productId: Long) {
         thread {
-            val product = ProductDb.open(requireContext()).productDao.getById(productId)
+            val product = db.productDao.getById(productId)
             requireActivity().runOnUiThread {
                 fillFields(product)
                 stopLoader()
@@ -82,6 +86,27 @@ class UpsertProductFragment : Fragment() {
         binding.expirationCalendar.setText(millisToText(product.expirationDate))
         val resId = resources.getIdentifier(product.image, "drawable", requireContext().packageName)
         imagesAdapter.selectImage(resId)
+
+        val calendar = Utils.millisToCalendar(product.expirationDate)
+        if (calendar.isBeforeByDays(Calendar.getInstance())) {
+            expired = true
+            disableFields()
+            showExpiredNotification()
+        }
+    }
+
+    private fun disableFields() {
+        binding.expirationCalendar.isEnabled = false
+        binding.nameField.isEnabled = false
+        binding.quantityField.isEnabled = false
+        binding.categorySpinner.isEnabled = false
+        binding.disposedField.isEnabled = false
+        imagesAdapter.disable()
+    }
+
+    fun Calendar.isBeforeByDays(other: Calendar): Boolean {
+        return this.get(Calendar.YEAR) < other.get(Calendar.YEAR) ||
+                (this.get(Calendar.YEAR) == other.get(Calendar.YEAR) && this.get(Calendar.DAY_OF_YEAR) < other.get(Calendar.DAY_OF_YEAR))
     }
 
     private fun millisToText(expirationDate: Long): String {
@@ -105,17 +130,13 @@ class UpsertProductFragment : Fragment() {
             showDatePicker(isNew, it)
         }
 
-//        binding.expirationCalendar.setOnDateChangeListener { view, year, month, dayOfMonth ->
-//            val calendar = Calendar.getInstance()
-//            calendar.set(year, month, dayOfMonth)
-//            view.date = calendar.timeInMillis
-//        }
-
         binding.quantityField.addTextChangedListener {
-            if (it.toString().toInt() < 1) {
-                binding.quantityField.setText("1")
+                if (it.toString().isEmpty()) {
+                    binding.quantityField.setText("0")
+                    binding.quantityField.setSelection(0, binding.quantityField.text.length)
+                }
             }
-        }
+
         binding.nameField.addTextChangedListener(
             beforeTextChanged = { _, _, _, _ -> },
             onTextChanged = { _, _, _, _ -> },
@@ -177,6 +198,11 @@ class UpsertProductFragment : Fragment() {
         return when (item.itemId) {
             R.id.save_product -> {
 
+                if (expired) {
+                    showExpiredNotification()
+                    return false
+                }
+
                 if (hasErrors()) {
                     showErrorNotification()
                     return false
@@ -192,7 +218,7 @@ class UpsertProductFragment : Fragment() {
                             disposed = binding.disposedField.isChecked,
                             image = resources.getResourceEntryName(imagesAdapter.selectedIdRes)
                         )
-                        ProductDb.open(requireContext()).productDao.addProduct(product)
+                        db.productDao.addProduct(product)
                     } else {
                         val product = ProductEntity(
                             id = productId,
@@ -203,7 +229,7 @@ class UpsertProductFragment : Fragment() {
                             disposed = binding.disposedField.isChecked,
                             image = resources.getResourceEntryName(imagesAdapter.selectedIdRes)
                         )
-                        ProductDb.open(requireContext()).productDao.updateProduct(product)
+                        db.productDao.updateProduct(product)
                     }
                     // navigate back to product list after saving
                     requireActivity().runOnUiThread {
@@ -216,6 +242,10 @@ class UpsertProductFragment : Fragment() {
         }
     }
 
+    private fun showExpiredNotification() {
+        Toast.makeText(requireContext(), this.resources?.getText(R.string.expired_product), Toast.LENGTH_SHORT).show()
+    }
+
     fun showErrorNotification() {
         Toast.makeText(requireContext(), this.resources?.getText(R.string.form_has_errors), Toast.LENGTH_SHORT).show()
     }
@@ -226,4 +256,8 @@ class UpsertProductFragment : Fragment() {
         return errors.isNotEmpty()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        db.close()
+    }
 }

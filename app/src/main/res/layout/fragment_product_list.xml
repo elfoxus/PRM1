@@ -10,14 +10,38 @@
     android:id="@+id/listLayout"
 >
     <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent" android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/spinners"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp">
+            <Spinner
+                android:id="@+id/categoryFilter"
+                android:layout_width="0dip"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                android:entries="@array/categories_filter"/>
+            <Spinner
+                android:id="@+id/expirationFilter"
+                android:layout_width="0dip"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                android:entries="@array/expired_filter"/>
+        </LinearLayout>
         <TextView android:id="@+id/listSizeLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/spinners"
                     style="@style/TextAppearance.AppCompat.Medium"
-                    />
+                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp" android:layout_marginStart="8dp" android:layout_marginTop="8dp"/>
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"

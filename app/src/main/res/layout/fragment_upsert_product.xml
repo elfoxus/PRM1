@@ -28,7 +28,7 @@
                             android:inputType="none" />
 <!--                      <CalendarView android:layout_width="match_parent" android:layout_height="307dp" android:id="@+id/expirationCalendar"/>-->
                       <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/quantityLabel" android:text="@string/quantity_label"/>
-                      <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" android:ems="10" android:id="@+id/quantityField" android:hint="@string/quantity_label" android:minHeight="48dp"/>
+                      <EditText android:layout_width="match_parent" android:digits="0123456789" android:layout_height="wrap_content" android:inputType="number" android:ems="10" android:id="@+id/quantityField" android:hint="@string/quantity_label" android:minHeight="48dp"/>
                       <Switch android:text="@string/disposed_label" android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/disposedField" android:minHeight="48dp"/>
                     </LinearLayout>
                 </androidx.core.widget.NestedScrollView>

@@ -28,6 +28,12 @@ class ProductViewHolder (val binding: ProductListElementBinding)
         binding.category.text = binding.root.resources.getStringArray(R.array.categories).get(product.category.getId())
         binding.quantity.text = product.quantity.toString()
         binding.imageView.setImageResource(product.resId)
+
+        if (product.quantity >= 1) {
+            binding.quantity.visibility = View.VISIBLE
+        } else {
+            binding.quantity.visibility = View.INVISIBLE
+        }
     }
 
     private fun handleEvents(
@@ -72,17 +78,23 @@ class ProductViewHolder (val binding: ProductListElementBinding)
     }
 
     private fun setBackground(product: Product) {
+        var color = R.color.white
         if (product.isExpired()) {
-            binding.cardView.setBackgroundColor(binding.root.resources.getColor(R.color.expired_bkg, null))
+//            binding.cardView.setBackgroundColor(binding.root.resources.getColor(R.color.expired_bkg, null))
+            color = R.color.expired_bkg
         }
 
         if (product.disposed) {
-            binding.cardView.setBackgroundColor(binding.root.resources.getColor(R.color.disposed_bkg, null))
+//            binding.cardView.setBackgroundColor(binding.root.resources.getColor(R.color.disposed_bkg, null))
+            color = R.color.disposed_bkg
         }
 
         if (product.isLastDay()) {
-            binding.cardView.setBackgroundColor(binding.root.resources.getColor(R.color.last_day_bkg, null))
+//            binding.cardView.setBackgroundColor(binding.root.resources.getColor(R.color.last_day_bkg, null))
+            color = R.color.last_day_bkg
         }
+
+        binding.cardView.setBackgroundResource(color)
     }
 
     private fun navigateToProductDetails(product: Product, view: View) {

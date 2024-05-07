@@ -60,7 +60,7 @@ class UpsertProductFragment : Fragment() {
 
     private fun setupEditedProductView(productId: Long) {
         fillFieldsOnInit(productId)
-        setupFields(false)
+        setupFields()
     }
 
     private fun fillFieldsOnInit(productId: Long) {
@@ -120,14 +120,14 @@ class UpsertProductFragment : Fragment() {
         binding.nameField.error = "Name cannot be empty"
         binding.disposedField.visibility = View.GONE
         binding.quantityField.setText("1") // default value
-        setupFields(true)
+        setupFields()
         stopLoader()
     }
 
-    private fun setupFields(isNew: Boolean) {
+    private fun setupFields() {
 
         binding.expirationCalendar.setOnClickListener {
-            showDatePicker(isNew, it)
+            showDatePicker(it)
         }
 
         binding.quantityField.addTextChangedListener {
@@ -152,7 +152,7 @@ class UpsertProductFragment : Fragment() {
         )
     }
 
-    private fun showDatePicker(isNew: Boolean, view: View) {
+    private fun showDatePicker(view: View) {
         val text = binding.expirationCalendar.text.toString()
         lateinit var initialCalendar: Calendar
         if (text.isEmpty()) {
@@ -171,9 +171,7 @@ class UpsertProductFragment : Fragment() {
             initialCalendar.get(Calendar.MONTH),
             initialCalendar.get(Calendar.DAY_OF_MONTH)
         ).also {
-            if(isNew) {
-                it.datePicker.minDate = Calendar.getInstance().timeInMillis
-            }
+            it.datePicker.minDate = Calendar.getInstance().timeInMillis
         }
         datePicker.show()
     }

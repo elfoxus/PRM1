@@ -34,8 +34,17 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-        loadExampleData()
+        // setup logo when in list view as requested in the task
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.upsertProductFragment) {
+                supportActionBar?.setDisplayUseLogoEnabled(false)
+            } else {
+                supportActionBar?.setDisplayUseLogoEnabled(true)
+                supportActionBar?.setLogo(R.drawable.logo)
+            }
+        }
 
+        loadExampleData()
     }
 
     override fun onDestroy() {
@@ -47,6 +56,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadExampleData() = thread {
         val dao = db.productDao
+//        dao.removeAll()
         if (dao.getAll().isEmpty()) {
             dao.insertAll(getExampleData())
         }
@@ -107,28 +117,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_main)
-//
-//        val currentFragment = getCurrentFragment()
-//        if (currentFragment is UpsertProductFragment && currentFragment.hasErrors()) {
-//            currentFragment.showErrorNotification()
-//            return false
-//        }
 
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-    }
-
-    override fun onBackPressed() {
-//        val currentFragment = getCurrentFragment()
-//        if (currentFragment is UpsertProductFragment && currentFragment.hasErrors()) {
-//            currentFragment.showErrorNotification()
-//        } else {
-            super.onBackPressed()
-//        }
-    }
-
-    private fun getCurrentFragment(): Fragment? {
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_main)
-        val currentFragment = navHostFragment?.childFragmentManager?.fragments?.get(0)
-        return currentFragment
     }
 }

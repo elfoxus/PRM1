@@ -66,4 +66,7 @@ interface ProductDao {
     fun removeProduct(product: ProductEntity)
     @Update
     fun updateProduct(product: ProductEntity)
+
+    @Query("DELETE FROM product")
+    fun removeAll()
 }
